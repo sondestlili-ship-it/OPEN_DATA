@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: ./backend_scala
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      CORS_ORIGINS: "http://localhost:3000"
+      OFF_TIMEOUT_MS: "10000"
+      CACHE_TTL_SECONDS: "300"
+      RATE_LIMIT_PER_MINUTE: "30"
+    # Healthcheck: le conteneur sbt n'inclut pas wget/curl par défaut
+    # Vérifier manuellement: curl http://localhost:8080/health
+
+# Frontend: lancer en local pour éviter les problèmes CORS navigateur
+#   cd frontend_react && npm run dev
+#   NEXT_PUBLIC_API_URL=http://localhost:8080

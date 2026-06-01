@@ -1,4 +1,10 @@
-FROM sbtscala/scala-sbt:graalvm-ce-21.3.0-java17_1.9.0_3.3.1
+FROM eclipse-temurin:17-jdk-jammy
+
+RUN apt-get update && apt-get install -y curl gnupg && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
+    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add - && \
+    apt-get update && apt-get install -y sbt && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY build.sbt ./

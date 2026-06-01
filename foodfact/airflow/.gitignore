@@ -1,0 +1,40 @@
+# Airflow logs
+logs/
+*.log
+
+# Airflow database
+airflow.db
+airflow.cfg
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# Airflow
+unittests.cfg
+.airflow_db_created
+
+# DAG validation
+airflow_warnings.txt

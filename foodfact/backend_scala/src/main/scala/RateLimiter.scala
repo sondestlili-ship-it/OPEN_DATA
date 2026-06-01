@@ -2,7 +2,6 @@ package app
 
 import cats.effect.IO
 import org.http4s.{HttpApp, Response, Status}
-import org.http4s.server.HttpMiddleware
 import io.circe.syntax._
 import io.circe.Json
 
@@ -27,16 +26,15 @@ final class RateLimiter(maxPerMinute: Int) {
     else false
   }
 
-  def middleware: HttpMiddleware[IO] = { httpApp: HttpApp[IO] =>
+  def middleware: HttpApp[IO] => HttpApp[IO] = { (httpApp: HttpApp[IO]) =>
     HttpApp[IO] { req =>
       val ip = req.remoteAddr.map(_.toString).getOrElse("unknown")
       if allow(ip) then httpApp.run(req)
       else
         IO.pure(
-          Response[IO](
-            Status.TooManyRequests,
-            org.http4s.headers.`Content-Type`(org.http4s.MediaType.application.json)
-          ).withEntity(Json.obj("error" -> Json.fromString("Rate limit exceeded")).noSpaces)
+          Response[IO](Status.TooManyRequests)
+            .putHeaders(org.http4s.headers.`Content-Type`(org.http4s.MediaType.application.json))
+            .withEntity(Json.obj("error" -> Json.fromString("Rate limit exceeded")).noSpaces)
         )
     }
   }

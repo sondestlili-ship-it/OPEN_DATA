@@ -32,9 +32,10 @@ object NovaParam        extends OptionalQueryParamDecoderMatcher[String]("nova")
 object Server extends IOApp {
 
   private def errorResponse(status: Status, message: String): IO[Response[IO]] =
-    Response[IO](status)
-      .withEntity(Json.obj("error" -> Json.fromString(message)).noSpaces)
-      .pure[IO]
+    IO.pure(
+      Response[IO](status)
+        .withEntity(Json.obj("error" -> Json.fromString(message)).noSpaces)
+    )
 
   private def handleApiError(error: Throwable): IO[Response[IO]] = error match
     case e: OffTimeoutException   => errorResponse(Status.GatewayTimeout, e.message)
